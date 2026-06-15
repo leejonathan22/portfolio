@@ -96,6 +96,12 @@
   .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
   .stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; line-height: 1; margin-bottom: 4px; }
   .stat-label { font-size: 12px; color: var(--muted); font-weight: 400; }
+  .case-study-toggle { font-size: 12px; font-weight: 500; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; margin: 0.5rem 0; text-align: left; }
+  .case-study-toggle:hover { opacity: 0.8; }
+  .case-study { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+  .case-study p { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 0.75rem; }
+  .case-study p:last-child { margin-bottom: 0; }
+  .case-study strong { color: var(--text); font-weight: 500; }
   .contact-row { display: flex; gap: 12px; flex-wrap: wrap; }
   footer { padding: 2rem; text-align: center; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
   @media (max-width: 640px) {
@@ -166,7 +172,14 @@
         <div class="project-title">InternFlow</div>
         <p class="project-desc">Full-stack internship CRM built to close a gap in student recruiting tools. Shipped v1, ran user research, then shipped an AI cover letter assistant and mock interview module in v2.</p>
         <div class="project-tags"><span class="project-tag">Next.js</span><span class="project-tag">Supabase</span><span class="project-tag">Vercel</span><span class="project-tag">AI</span></div>
-        <a href="https://internflow-eta.vercel.app" target="_blank" class="project-link green">Live site →</a>
+        <button class="case-study-toggle" onclick="toggleCase(this)">Read the case study ↓</button>
+        <div class="case-study" style="display:none;">
+          <p>Most students track recruiting in a borrowed Google Sheets template. I wanted something that actually worked for me — so I built it.</p>
+          <p><strong>v1</strong> was a clean application and relationship tracker. You could log companies, track status, and manage recruiter contacts in one place. I demoed it to 15+ students and the feedback was consistent: the tracking was useful, but they wanted the tool to do more than organize — they wanted it to help them prepare.</p>
+          <p><strong>v2</strong> integrated the Claude API to add an AI assistant for coffee chat prep and interview practice. The idea came naturally — I was already using Claude to prep for my own coffee chats and interviews, so I built it directly into the product. Instead of jumping between a spreadsheet and an AI tool, students could stay in one place from application to offer.</p>
+          <p>It's the project I'm most proud of because it followed a real PM arc — identify a gap, ship fast, talk to users, iterate on signal.</p>
+        </div>
+        <a href="https://internflow-eta.vercel.app" target="_blank" class="project-link green" style="margin-top:1rem;">Live site →</a>
       </div>
       <div class="project-card cyan" data-cat="ml">
         <div class="project-icon cyan">📈</div>
@@ -299,6 +312,12 @@
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
   });
+  function toggleCase(btn) {
+    const cs = btn.nextElementSibling;
+    const open = cs.style.display !== 'none';
+    cs.style.display = open ? 'none' : 'block';
+    btn.textContent = open ? 'Read the case study ↓' : 'Close ↑';
+  }
   function filter(cat, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
