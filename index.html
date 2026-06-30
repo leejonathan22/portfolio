@@ -78,6 +78,15 @@
   .project-link.pink { color: var(--accent5); }
   .project-link.teal { color: #2dd4bf; }
   .project-link:hover { gap: 7px; }
+  .data-table-wrap { overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); border-radius: 8px; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .data-table th { text-align: left; font-weight: 600; color: var(--muted); background: var(--surface2); padding: 8px 10px; border-bottom: 1px solid var(--border2); white-space: nowrap; }
+  .data-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: var(--text); white-space: nowrap; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table td.rating { font-weight: 600; }
+  .data-table td.rating.low { color: #f87171; }
+  .data-table td.rating.high { color: var(--accent); }
+  .data-table-caption { font-size: 11px; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--border); }
   .coming-soon { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent3); background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.2); padding: 3px 10px; border-radius: 20px; display: inline-block; }
   .exp-list { display: flex; flex-direction: column; }
   .exp-item { display: grid; grid-template-columns: 120px 1fr; gap: 2rem; padding: 2rem 0; border-bottom: 1px solid var(--border); }
@@ -191,9 +200,36 @@
       <div class="project-card purple" data-cat="ml product">
         <div class="project-icon purple">🧠</div>
         <div class="project-title">Fintech Sentiment Engine</div>
-        <p class="project-desc">River of public data — app reviews, Reddit, social — clustered into product themes across major fintech apps. Outputs a PM-ready brief: here's what users want that nobody's built yet.</p>
+        <p class="project-desc">~1,000 Google Play reviews across Chime, Cash App, Affirm, Klarna, and Chase, clustered into product themes with BERTopic and synthesized into a PM-ready strategic brief via the Claude API — surfacing where BNPL and neobank products are winning, and where incumbents are losing.</p>
         <div class="project-tags"><span class="project-tag">NLP</span><span class="project-tag">BERTopic</span><span class="project-tag">Python</span><span class="project-tag">Streamlit</span><span class="project-tag">Claude AI</span></div>
-        <span class="coming-soon">Coming soon</span>
+        <button class="case-study-toggle" onclick="toggleCase(this)">Read the case study ↓</button>
+        <div class="case-study" style="display:none;">
+          <p>I wanted to go beyond a feature comparison and ask a sharper question: is BNPL/neobank growth a transactional threat to cobrand cards, or something more structural?</p>
+          <p><strong>Pipeline:</strong> scraped ~1,000 Google Play reviews across five apps, embedded them with sentence-transformers, and clustered them with BERTopic. After excluding generic-positive noise (~9% of reviews), nine meaningful topics remained — spanning app reliability, account trust, and BNPL/neobank-specific themes.</p>
+          <p><strong>Finding:</strong> the data didn't show users explicitly switching from cobrand cards to BNPL — that claim would have overstated what the clustering actually supported. What it did show was more structural: Chase's worst-performing cluster was login/app failures (1.8★), while BNPL's highest-rated cluster was its pay-over-time value prop (4.5★) — alongside real downside in BNPL trust (account closures, credit score damage, also 1.8★). The synthesis: the substitution risk is friction-driven, not feature-driven.</p>
+          <p>The Claude API step was the one I cared about most — not summarizing each topic, but reasoning across them into a single, defensible point of view, the way a PM memo argues toward a recommendation rather than just reporting findings.</p>
+          <div class="data-table-wrap">
+            <div class="data-table-caption">850 usable docs · 94 generic-positive excluded · 9 meaningful topics</div>
+            <table class="data-table">
+              <thead>
+                <tr><th>#</th><th>Theme</th><th>Docs</th><th>Avg ★</th><th>Dominant app</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>0</td><td>Card payments, refunds & merchant friction</td><td>251</td><td class="rating">3.8</td><td>Klarna 31% · Affirm 20% · Chase 19%</td></tr>
+                <tr><td>1</td><td>App update & login failures</td><td>96</td><td class="rating low">1.8</td><td>Chase 45% · Affirm 24% · Klarna 14%</td></tr>
+                <tr><td>3</td><td>Account closures, dispute denials & credit score damage</td><td>76</td><td class="rating low">1.8</td><td>Affirm 36% · Klarna 25% · Cash App 16%</td></tr>
+                <tr><td>4</td><td>App quality — mixed satisfaction</td><td>69</td><td class="rating">4.1</td><td>Mixed</td></tr>
+                <tr><td>5</td><td>Chime product experience (SpotMe, early direct deposit)</td><td>62</td><td class="rating">4.4</td><td>Chime 100%</td></tr>
+                <tr><td>6</td><td>BNPL pay-over-time value proposition</td><td>59</td><td class="rating high">4.5</td><td>Klarna 29% · Affirm 22% · Chime 20%</td></tr>
+                <tr><td>7</td><td>Banking fundamentals (fees, deposits, customer service)</td><td>54</td><td class="rating">3.8</td><td>Chase 44% · Chime 31%</td></tr>
+                <tr><td>8</td><td>Cash App — fraud, unauthorized charges & deactivation</td><td>47</td><td class="rating">3.6</td><td>Cash App 87%</td></tr>
+                <tr><td>9</td><td>Affirm — loan terms & interest rate friction</td><td>42</td><td class="rating">3.1</td><td>Affirm 90% · Klarna 7%</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="font-size:12px; color:var(--muted);"><strong style="color:var(--text);">Pain clusters:</strong> Topics 1 and 3 both sit at 1.8★ — the two lowest-rated themes in the corpus. Topic 1 is a Chase-heavy technical failure; Topic 3 is a trust/credit cluster concentrated in Affirm and Klarna. <strong style="color:var(--text);">Positive clusters:</strong> Topic 6 (BNPL pay-over-time, 4.5★) and Topic 5 (Chime, 4.4★) are the highest-rated, driven by users who actively chose these products for specific mechanics.</p>
+        </div>
+        <a href="https://github.com/leejonathan22/fintech-sentiment-engine" target="_blank" class="project-link purple" style="margin-top:1rem;">GitHub →</a>
       </div>
       <div class="project-card orange" data-cat="data ml">
         <div class="project-icon orange">🚗</div>
